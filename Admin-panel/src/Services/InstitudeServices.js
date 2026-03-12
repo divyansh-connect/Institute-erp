@@ -49,11 +49,11 @@ export const stdAdmSubmitting = async (stdAdm) => {
   }
 };
 
-export const institudeAnnouncement = async (announced) => {
+export const institudeAnnouncement = async (payload) => {
   try {
     const response = await apiFetch(`http://localhost:3000/api/announcement/`, {
       method: "POST",
-      body: JSON.stringify(announced),
+      body: JSON.stringify(payload),
     });
 
     const data = response.json();

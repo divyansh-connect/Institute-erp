@@ -10,7 +10,7 @@ const authRouter = require("./Router/authRouter");
 const uploadRouter = require("./Router/uploadRouter");
 const courseRouter = require("./Router/courseRouter");
 const institudeRouter = require("./Router/institudeRouter");
-const announcementRouter = require("./Router/AnnouncementRouter");
+const announcementRouter = require("./Router/announcementRouter");
 
 const app = express();
 
@@ -18,7 +18,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/api/course", courseRouter);
-
+app.use("/api/announcement", announcementRouter);
 app.use("/api/institude", institudeRouter);
 app.use("/api/upload", uploadRouter);
 app.use("/api/auth", authRouter);

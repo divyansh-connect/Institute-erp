@@ -1,6 +1,7 @@
 import React, { useState } from "react";
+import { institudeAnnouncement } from "../../../Services/InstitudeServices";
 
-const AddAnnouncement = async () => {
+const AddAnnouncement = () => {
   const [validator, setValidator] = useState("");
   const [announcement, setAnnouncement] = useState({
     title: "",
@@ -8,7 +9,7 @@ const AddAnnouncement = async () => {
   });
   let error = {};
 
-  const handlePublishBtn = () => {
+  const handlePublishBtn = async () => {
     const cleanAnnouncement = {
       title: announcement.title.trim(),
       description: announcement.description.trim(),
@@ -23,7 +24,14 @@ const AddAnnouncement = async () => {
     setValidator(error);
 
     if (Object.keys(error).length === 0) {
-      // API Calls
+      const payload = {
+        title: cleanAnnouncement.title,
+        message: cleanAnnouncement.description,
+      };
+      try {
+        // API Calls
+        const response = await institudeAnnouncement(payload);
+      } catch (error) {}
 
       setAnnouncement({
         title: "",
