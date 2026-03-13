@@ -56,11 +56,11 @@ export const institudeAnnouncement = async (payload) => {
       body: JSON.stringify(payload),
     });
 
-    const data = response.json();
+    const data = await response.json();
     if (!response.ok) {
       return {
         success: false,
-        message: result.message || "Announcement upload failed",
+        message: data.message || "Announcement upload failed",
       };
     }
     return {
@@ -70,6 +70,63 @@ export const institudeAnnouncement = async (payload) => {
     };
   } catch (error) {
     if ((error.message = "Unauthorized")) {
+      throw error;
+    }
+    return {
+      success: false,
+      message: error.message || "Network error",
+    };
+  }
+};
+
+export const getinstituteAnnouncement = async () => {
+  try {
+    const response = await apiFetch(`http://localhost:3000/api/announcement/`);
+    const data = await response.json();
+    if (!response.ok) {
+      return {
+        success: false,
+        message: data.message || "Announcement find failed",
+      };
+    }
+    return {
+      success: true,
+      message: data.message || "Announcement find",
+      data: data.data,
+    };
+  } catch (error) {
+    if (error.message === "Unauthorized") {
+      throw error;
+    }
+    return {
+      success: false,
+      message: error.message || "Network error",
+    };
+  }
+};
+
+export const deleteInstituteAnnouncement = async (deleteId) => {
+  try {
+    const response = await apiFetch(
+      `http://localhost:3000/api/announcement/${deleteId}`,
+      {
+        method: "DELETE",
+      },
+    );
+    const data = await response.json();
+    if (!response.ok) {
+      return {
+        success: false,
+        message: data.message || "Delete failed",
+      };
+    }
+    return {
+      success: true,
+      message: data.message || "Deleted successfully",
+      data: data.data,
+    };
+  } catch (error) {
+    if (error.message === "Unauthorized") {
       throw error;
     }
     return {

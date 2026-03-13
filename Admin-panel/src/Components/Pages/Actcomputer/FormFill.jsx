@@ -58,9 +58,8 @@ const FormFill = ({
     stdPinCode: "",
   });
 
-  let errMsg = {};
-
   const handleFormSubmit = async () => {
+    const errMsg = {};
     try {
       setIsSubmitting(true);
       const cleanData = {

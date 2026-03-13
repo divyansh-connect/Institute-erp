@@ -44,3 +44,8 @@ exports.studentAdmValidator = joi.object({
   stdPhoto: joi.string().required(),
   stdEnroll: joi.string().allow(null).optional(),
 });
+
+exports.announcementValidator = joi.object({
+  title: joi.string().trim().required(),
+  message: joi.string().trim().required(),
+});

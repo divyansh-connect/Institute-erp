@@ -1,15 +1,15 @@
 import React, { useState } from "react";
 import { institudeAnnouncement } from "../../../Services/InstitudeServices";
 
-const AddAnnouncement = () => {
-  const [validator, setValidator] = useState("");
+const AddAnnouncement = ({ setRefresh }) => {
+  const [validator, setValidator] = useState({});
   const [announcement, setAnnouncement] = useState({
     title: "",
     description: "",
   });
-  let error = {};
 
   const handlePublishBtn = async () => {
+    const error = {};
     const cleanAnnouncement = {
       title: announcement.title.trim(),
       description: announcement.description.trim(),
@@ -21,22 +21,36 @@ const AddAnnouncement = () => {
     if (!cleanAnnouncement.description) {
       error.description = "Announcement Details is required";
     }
-    setValidator(error);
+    if (Object.keys(error).length > 0) {
+      return setValidator(error);
+    }
+    const payload = {
+      title: cleanAnnouncement.title,
+      message: cleanAnnouncement.description,
+    };
 
-    if (Object.keys(error).length === 0) {
-      const payload = {
-        title: cleanAnnouncement.title,
-        message: cleanAnnouncement.description,
-      };
-      try {
-        // API Calls
-        const response = await institudeAnnouncement(payload);
-      } catch (error) {}
-
+    try {
+      // API Calls
+      const response = await institudeAnnouncement(payload);
+      if (!response.success) {
+        return setValidator({ success: response.message });
+      }
       setAnnouncement({
         title: "",
         description: "",
       });
+      setValidator({ success: response.message });
+      setRefresh((prew) => !prew);
+    } catch (error) {
+      console.log(error.message);
+
+      if (error.message === "Unauthorized") {
+        setValidator({ success: "Session expired. Please login again." });
+        return;
+      }
+      if (!error.success) {
+        return setValidator({ success: error.message });
+      }
     }
   };
   return (
@@ -44,6 +58,11 @@ const AddAnnouncement = () => {
       {/* Add Announcement Form */}
       <div className="card shadow-sm mb-4">
         <div className="card-body">
+          {validator.success && (
+            <div className="text-danger small text-center">
+              {validator.success}
+            </div>
+          )}
           <h5 className="mb-3">Add New Announcement</h5>
 
           <div className="row g-2">
